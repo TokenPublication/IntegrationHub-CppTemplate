@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_POSCommunicationDemo_FILE /Users/denizhandalgic/Projects/gitlab-payosy/IntegrationHub-VSCpp/QtGUI/build/POSCommunicationDemo)
+set(__QT_DEPLOY_TARGET_POSCommunicationDemo_TYPE EXECUTABLE)
