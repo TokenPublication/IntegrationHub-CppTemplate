@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\build\POSCommunicationDemo_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\poscommunication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\build\POSCommunicationDemo_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\build\POSCommunicationDemo_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\build\POSCommunicationDemo_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\poscommunication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Samsung\Desktop\IntegrationHub-CppTemplate-master\QtGUI\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{893C6D9A-D3E5-3396-919C-AB9FA507AC69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{F5603C73-D288-31D9-A6E9-7EAA260B7EB2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,22 +1,3 @@
-/**
- * @file poscommunication.cpp
- * @brief Implementation of the POSCommunication class that provides an interface 
- *        for Integration Hub.
- * 
- * Language: C++
- * Framework: Qt
- * 
- * - Establishing connections to POS devices
- * - Managing device state and reconnection
- * - Sending basket data and payment information to devices
- * - Retrieving fiscal information
- * - Handling callbacks for device events
- * 
- * The class follows a singleton pattern allowing for a single communication instance
- * throughout the application. It dynamically loads required DLLs at runtime,
- * providing safer error handling for various environments.
- */
-
 #include "poscommunication.h"
 #include <QDir>
 #include <QCoreApplication>
@@ -26,15 +7,6 @@
 // Initialize static instance
 POSCommunication* POSCommunication::m_instance = nullptr;
 
-/**
- * @brief Constructor for the POSCommunication class
- * 
- * Initializes the communication object with the given company name,
- * loads required libraries, and sets up function pointers.
- * 
- * @param companyName The company identifier used when connecting to devices
- * @param parent The parent QObject (for memory management)
- */
 POSCommunication::POSCommunication(const QString& companyName, QObject* parent)
     : QObject(parent)
     , m_companyName(companyName)
@@ -52,12 +24,6 @@ POSCommunication::POSCommunication(const QString& companyName, QObject* parent)
     initializeFunctions();
 }
 
-/**
- * @brief Destructor for the POSCommunication class
- * 
- * Cleans up resources by disconnecting from devices,
- * unloading libraries, and clearing the singleton instance.
- */
 POSCommunication::~POSCommunication()
 {
     // Clean up connection
@@ -76,15 +42,6 @@ POSCommunication::~POSCommunication()
     }
 }
 
-/**
- * @brief Gets the singleton instance of POSCommunication
- * 
- * Creates a new instance if one doesn't exist, otherwise returns the existing one.
- * This ensures only one communication channel exists throughout the application.
- * 
- * @param companyName The company identifier used when connecting to devices
- * @return Pointer to the POSCommunication singleton
- */
 POSCommunication* POSCommunication::getInstance(const QString& companyName)
 {
     if (!m_instance) {
@@ -93,33 +50,16 @@ POSCommunication* POSCommunication::getInstance(const QString& companyName)
     return m_instance;
 }
 
-/**
- * @brief Checks if a connection to a device is established
- * 
- * @return True if connected, false otherwise
- */
 bool POSCommunication::isConnected() const
 {
     return m_isConnected;
 }
 
-/**
- * @brief Checks if a connection attempt is in progress
- * 
- * @return True if connecting, false otherwise
- */
 bool POSCommunication::isConnecting() const
 {
     return m_isConnecting;
 }
 
-/**
- * @brief Initiates a connection to a POS device
- * 
- * This function creates a new thread to handle the connection process,
- * ensuring the main thread remains responsive. It sets up necessary callbacks
- * and handles errors appropriately.
- */
 void POSCommunication::connect()
 {
     if (m_connection != nullptr) {
@@ -159,14 +99,6 @@ void POSCommunication::connect()
     QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 }
 
-/**
- * @brief Performs the actual connection to the POS device
- * 
- * This function is platform-specific and only available on Windows.
- * It creates the communication instance and sets up necessary callbacks.
- * 
- * @throws std::runtime_error if the connection fails
- */
 void POSCommunication::doConnect()
 {
 #ifdef Q_OS_WIN
@@ -191,12 +123,6 @@ void POSCommunication::doConnect()
 #endif
 }
 
-/**
- * @brief Disconnects from the POS device
- * 
- * This function is platform-specific and only available on Windows.
- * It deletes the communication instance and updates the connection status.
- */
 void POSCommunication::disconnect()
 {
 #ifdef Q_OS_WIN
@@ -210,13 +136,6 @@ void POSCommunication::disconnect()
 #endif
 }
 
-/**
- * @brief Reconnects to the POS device
- * 
- * This function is platform-specific and only available on Windows.
- * It either initiates a new connection or calls the reconnect function
- * on the existing connection.
- */
 void POSCommunication::reconnect()
 {
 #ifdef Q_OS_WIN
@@ -229,15 +148,6 @@ void POSCommunication::reconnect()
 #endif
 }
 
-/**
- * @brief Gets the index of the active device
- * 
- * This function is platform-specific and only available on Windows.
- * It retrieves the index of the currently active device.
- * 
- * @return The index of the active device
- * @throws std::runtime_error if not connected or function not available
- */
 int POSCommunication::getActiveDeviceIndex()
 {
 #ifdef Q_OS_WIN
@@ -250,16 +160,6 @@ int POSCommunication::getActiveDeviceIndex()
 #endif
 }
 
-/**
- * @brief Sends basket data to the POS device
- * 
- * This function is platform-specific and only available on Windows.
- * It sends the provided JSON data representing the basket to the device.
- * 
- * @param jsonData The JSON data representing the basket
- * @return The result of the send operation
- * @throws std::runtime_error if not connected or function not available
- */
 int POSCommunication::sendBasket(const QString& jsonData)
 {
 #ifdef Q_OS_WIN
@@ -272,16 +172,6 @@ int POSCommunication::sendBasket(const QString& jsonData)
 #endif
 }
 
-/**
- * @brief Sends payment data to the POS device
- * 
- * This function is platform-specific and only available on Windows.
- * It sends the provided JSON data representing the payment to the device.
- * 
- * @param jsonData The JSON data representing the payment
- * @return The result of the send operation
- * @throws std::runtime_error if not connected or function not available
- */
 int POSCommunication::sendPayment(const QString& jsonData)
 {
 #ifdef Q_OS_WIN
@@ -294,15 +184,6 @@ int POSCommunication::sendPayment(const QString& jsonData)
 #endif
 }
 
-/**
- * @brief Retrieves fiscal information from the POS device
- * 
- * This function is platform-specific and only available on Windows.
- * It retrieves fiscal information from the device and returns it as a QString.
- * 
- * @return The fiscal information as a QString
- * @throws std::runtime_error if not connected or function not available
- */
 QString POSCommunication::getFiscalInfo()
 {
 #ifdef Q_OS_WIN
@@ -318,14 +199,6 @@ QString POSCommunication::getFiscalInfo()
 #endif
 }
 
-/**
- * @brief Loads required libraries for communication
- * 
- * This function is platform-specific and only available on Windows.
- * It dynamically loads the required DLLs and stores them in a list.
- * 
- * @return True if all libraries were loaded successfully, false otherwise
- */
 bool POSCommunication::loadLibraries()
 {
 #ifdef Q_OS_WIN
@@ -379,12 +252,6 @@ bool POSCommunication::loadLibraries()
 #endif
 }
 
-/**
- * @brief Initializes function pointers for communication
- * 
- * This function is platform-specific and only available on Windows.
- * It resolves function pointers from the loaded IntegrationHubCpp.dll.
- */
 void POSCommunication::initializeFunctions()
 {
 #ifdef Q_OS_WIN
@@ -425,15 +292,6 @@ void POSCommunication::initializeFunctions()
 }
 
 #ifdef Q_OS_WIN
-/**
- * @brief Callback handler for serial input events
- * 
- * This function is called when serial input is received from the device.
- * It invokes the appropriate Qt signals to handle the event.
- * 
- * @param typeCode The type code of the serial input
- * @param value The value of the serial input
- */
 void __stdcall POSCommunication::serialInCallbackHandler(int typeCode, BSTR value)
 {
     if (m_instance) {
@@ -445,15 +303,6 @@ void __stdcall POSCommunication::serialInCallbackHandler(int typeCode, BSTR valu
     }
 }
 
-/**
- * @brief Callback handler for device state events
- * 
- * This function is called when the device state changes (e.g., connected or disconnected).
- * It invokes the appropriate Qt signals to handle the event and attempts to reconnect if disconnected.
- * 
- * @param isConnected True if the device is connected, false otherwise
- * @param deviceId The ID of the device
- */
 void __stdcall POSCommunication::deviceStateCallbackHandler(bool isConnected, BSTR deviceId)
 {
     if (m_instance) {

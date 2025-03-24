@@ -1,28 +1,9 @@
-/**
- * @file mainwindow.cpp
- * @brief Implementation of the MainWindow class for the IntegrationHub POS Communication Demo
- * 
- * This file implements a Qt-based GUI application in C++ that demonstrates communication
- * with Integration Hub.
-
- * Dependencies: Qt Framework, POSCommunication library
- */
-
 #include "mainwindow.h"
 #include <QMessageBox>
 #include <QApplication>
 #include <QScreen>
 #include <QTimer>
 
-/**
- * @brief Constructs the main window and initializes the POS communication
- * 
- * Sets up the UI components and attempts to establish a connection with the
- * POS system if running on Windows. On other platforms, buttons are disabled
- * as the IntegrationHub library is Windows-specific.
- * 
- * @param parent The parent widget
- */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_btnSendBasket(nullptr)
@@ -61,23 +42,11 @@ MainWindow::MainWindow(QWidget *parent)
     }
 }
 
-/**
- * @brief Destructor for MainWindow
- * 
- * POSCommunication is implemented as a singleton, so it doesn't need
- * to be explicitly deleted here.
- */
 MainWindow::~MainWindow()
 {
     // POSCommunication is a singleton, no need to delete it here
 }
 
-/**
- * @brief Sets up the user interface components
- * 
- * Creates and arranges the UI elements including buttons and text area,
- * connects button signals to appropriate slots, and centers the window on screen.
- */
 void MainWindow::setupUi()
 {
     // Set window properties
@@ -127,24 +96,12 @@ void MainWindow::setupUi()
     updateButtons();
 }
 
-/**
- * @brief Logs a message to the text area with a timestamp
- * 
- * @param message The message to log
- */
 void MainWindow::log(const QString& message)
 {
     QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     m_textLog->append(QString("[%1] %2").arg(timestamp).arg(message));
 }
 
-/**
- * @brief Updates the state of the buttons based on connection status
- * 
- * Enables or disables the buttons depending on whether the POS communication
- * is connected, connecting, or disconnected. On non-Windows platforms, all
- * buttons are disabled.
- */
 void MainWindow::updateButtons()
 {
 #ifdef Q_OS_WIN
@@ -172,11 +129,6 @@ void MainWindow::updateButtons()
 #endif
 }
 
-/**
- * @brief Slot for handling Send Basket button click
- * 
- * Sends a sample basket data to the POS system and logs the response.
- */
 void MainWindow::onSendBasketClicked()
 {
     const QString sampleBasket = R"({
@@ -202,11 +154,6 @@ void MainWindow::onSendBasketClicked()
     }
 }
 
-/**
- * @brief Slot for handling Send Payment button click
- * 
- * Sends a sample payment data to the POS system and logs the response.
- */
 void MainWindow::onSendPaymentClicked()
 {
     const QString samplePayment = R"({
@@ -222,11 +169,6 @@ void MainWindow::onSendPaymentClicked()
     }
 }
 
-/**
- * @brief Slot for handling Get Fiscal Info button click
- * 
- * Retrieves fiscal information from the POS system and logs it.
- */
 void MainWindow::onGetFiscalInfoClicked()
 {
     try {
@@ -237,51 +179,21 @@ void MainWindow::onGetFiscalInfoClicked()
     }
 }
 
-/**
- * @brief Slot for handling log messages from POS communication
- * 
- * Logs the received message.
- * 
- * @param message The log message
- */
 void MainWindow::onLogMessage(const QString& message)
 {
     log(message);
 }
 
-/**
- * @brief Slot for handling connection status changes
- * 
- * Updates the state of the buttons based on the new connection status.
- * 
- * @param isConnected True if connected, false otherwise
- */
 void MainWindow::onConnectionStatusChanged(bool isConnected)
 {
     updateButtons();
 }
 
-/**
- * @brief Slot for handling serial input received from POS communication
- * 
- * Logs the received serial input.
- * 
- * @param typeCode The type code of the serial input
- * @param value The value of the serial input
- */
 void MainWindow::onSerialInReceived(int typeCode, const QString& value)
 {
     log(QString("Serial In - Type: %1, Value: %2").arg(typeCode).arg(value));
 }
 
-/**
- * @brief Slot for handling device state changes
- * 
- * Logs the new device state and updates the state of the buttons.
- * 
- * @param isConnected True if the device is connected, false otherwise
- * @param deviceId The ID of the device
- */
 void MainWindow::onDeviceStateChanged(bool isConnected, const QString& deviceId)
 {
     log(QString("Device State - Connected: %1, ID: %2")
