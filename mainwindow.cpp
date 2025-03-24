@@ -1,9 +1,31 @@
+/**
+ * @file mainwindow.cpp
+ * @brief Implementation file for the MainWindow class which handles the UI and POS communication
+ * @date 2023
+ * 
+ * This file implements a Qt-based UI application that demonstrates integration with a POS system
+ * through the IntegrationHub library. The application provides a simple interface for sending
+ * basket data, payment information, and retrieving fiscal information from a connected POS terminal.
+ * 
+ * Platform: This code is primarily designed for Windows platforms where the IntegrationHub library
+ * is supported. While the UI will display on other platforms, the POS communication functionality
+ * is disabled outside of Windows environments.
+ */
+
 #include "mainwindow.h"
 #include <QMessageBox>
 #include <QApplication>
 #include <QScreen>
 #include <QTimer>
 
+/**
+ * @brief Constructor for the MainWindow class
+ * @param parent The parent widget (default is nullptr for top-level windows)
+ * 
+ * Initializes the UI components and establishes connections with the POS system.
+ * If running on Windows, it automatically attempts to connect to the POS device.
+ * On non-Windows platforms, it disables the interactive buttons.
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_btnSendBasket(nullptr)
@@ -42,11 +64,26 @@ MainWindow::MainWindow(QWidget *parent)
     }
 }
 
+/**
+ * @brief Destructor for the MainWindow class
+ * 
+ * Since POSCommunication is implemented as a singleton pattern,
+ * no explicit deletion is required here.
+ */
 MainWindow::~MainWindow()
 {
     // POSCommunication is a singleton, no need to delete it here
 }
 
+/**
+ * @brief Sets up the user interface components
+ * 
+ * This method creates and arranges all UI elements including:
+ * - Window title and size
+ * - Button controls for POS operations
+ * - Text area for logging
+ * It also centers the window on the screen and connects button signals to their handlers.
+ */
 void MainWindow::setupUi()
 {
     // Set window properties
@@ -96,12 +133,25 @@ void MainWindow::setupUi()
     updateButtons();
 }
 
+/**
+ * @brief Adds a timestamped message to the log display
+ * @param message The message text to be logged
+ * 
+ * Formats the message with a timestamp and appends it to the text log area.
+ */
 void MainWindow::log(const QString& message)
 {
     QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     m_textLog->append(QString("[%1] %2").arg(timestamp).arg(message));
 }
 
+/**
+ * @brief Updates the enabled state of UI buttons based on connection status
+ * 
+ * Enables or disables the action buttons depending on whether the POS device
+ * is connected. Also updates the window title to reflect the current connection status.
+ * On non-Windows platforms, all POS-related buttons remain disabled.
+ */
 void MainWindow::updateButtons()
 {
 #ifdef Q_OS_WIN
@@ -129,6 +179,13 @@ void MainWindow::updateButtons()
 #endif
 }
 
+/**
+ * @brief Handler for the "Send Basket" button click
+ * 
+ * Sends a sample basket in JSON format to the POS device.
+ * The sample includes a tax-free transaction with customer information.
+ * Logs the result of the operation, including any errors that occur.
+ */
 void MainWindow::onSendBasketClicked()
 {
     const QString sampleBasket = R"({
@@ -154,6 +211,13 @@ void MainWindow::onSendBasketClicked()
     }
 }
 
+/**
+ * @brief Handler for the "Send Payment" button click
+ * 
+ * Sends a sample payment request in JSON format to the POS device.
+ * The sample includes an amount and payment type.
+ * Logs the result of the operation, including any errors that occur.
+ */
 void MainWindow::onSendPaymentClicked()
 {
     const QString samplePayment = R"({
@@ -169,6 +233,12 @@ void MainWindow::onSendPaymentClicked()
     }
 }
 
+/**
+ * @brief Handler for the "Get Fiscal Info" button click
+ * 
+ * Requests fiscal information from the connected POS device.
+ * Logs the received information or any errors that occur during the request.
+ */
 void MainWindow::onGetFiscalInfoClicked()
 {
     try {
@@ -179,21 +249,49 @@ void MainWindow::onGetFiscalInfoClicked()
     }
 }
 
+/**
+ * @brief Slot handler for log messages from the POS communication module
+ * @param message The message to be logged
+ * 
+ * Receives log messages from the POSCommunication instance and forwards them
+ * to the application's logging system.
+ */
 void MainWindow::onLogMessage(const QString& message)
 {
     log(message);
 }
 
+/**
+ * @brief Slot handler for connection status changes
+ * @param isConnected Boolean indicating whether the device is now connected
+ * 
+ * Updates the UI in response to changes in the connection status of the POS device.
+ */
 void MainWindow::onConnectionStatusChanged(bool isConnected)
 {
     updateButtons();
 }
 
+/**
+ * @brief Slot handler for serial input received from the POS device
+ * @param typeCode The type code of the received data
+ * @param value The actual data value received
+ * 
+ * Logs the serial input received from the POS device, including its type code and value.
+ */
 void MainWindow::onSerialInReceived(int typeCode, const QString& value)
 {
     log(QString("Serial In - Type: %1, Value: %2").arg(typeCode).arg(value));
 }
 
+/**
+ * @brief Slot handler for device state changes
+ * @param isConnected Boolean indicating whether the device is now connected
+ * @param deviceId The identifier of the device that changed state
+ * 
+ * Updates the UI in response to changes in the state of the connected POS device.
+ * Also logs the device state change with its ID for diagnostic purposes.
+ */
 void MainWindow::onDeviceStateChanged(bool isConnected, const QString& deviceId)
 {
     log(QString("Device State - Connected: %1, ID: %2")
